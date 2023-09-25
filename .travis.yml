@@ -9,7 +9,14 @@ script:
   - docker run -e CI=true mardaukar/react-test npm test
 
 after_success:
-  - docker build -t mardaukar/muti-client ./client
+  - docker build -t mardaukar/multi-client ./client
   - docker build -t mardaukar/multi-nginx ./nginx
   - docker build -t mardaukar/multi-server ./server
   - docker build -t mardaukar/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push mardaukar/multi-client
+  - docker push mardaukar/multi-nginx
+  - docker push mardaukar/multi-server
+  - docker push mardaukar/multi-worker

@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t mardaukar/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true mardaukar/react-test npm test
+
+after_success:
+  - docker build -t mardaukar/muti-client ./client
+  - docker build -t mardaukar/multi-nginx ./nginx
+  - docker build -t mardaukar/multi-server ./server
+  - docker build -t mardaukar/multi-worker ./worker
